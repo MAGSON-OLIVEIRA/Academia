@@ -7,7 +7,7 @@ public class Validation {
 			String s = (String) obj;
 			
 			if(StringUtils.isEmpty(s)) {
-				throw new ValidationException("O texto não pode ser null");
+				throw new ValidationException("O parametro não pode ser null");
 			}
 		}
 		

@@ -2,12 +2,15 @@ package br.com.academia.domain.aluno;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.Year;
 
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+
+import br.com.academia.aplication.util.StringUtils;
 
 @Entity
 @Table(name="ALUNO")
@@ -34,7 +37,7 @@ public class Aluno implements Serializable {
 	@Column(name="RG", nullable = false, length = 10)
 	private Integer rg;
 	
-	@Column(name="DT_NASCIMENTO", nullable = false)
+	@Column(name="DT_NASCIMENTO", nullable = true)
 	private LocalDate dataNascimento;
 	
 	@Column(name="SITUACAO", nullable = false, length = 1)
@@ -49,10 +52,22 @@ public class Aluno implements Serializable {
 	// USO @Embedded JPA FAZ COM QUE O  endereço SEJA parte do ALUNO compartillhando o id do ALUNO 
 	@Embedded
 	private Telefone telefone = new Telefone();
+	
+	//TODO: GERAR LOGICA
+	public void gerarMatricula(String maxMatricula) {
+		Year year = Year.now();
+		if(maxMatricula == null) {
+			maxMatricula = year + StringUtils.lefZeroes(0, 4);
+		}
+		int sequencia = Integer.parseInt(maxMatricula.substring(4));	
+		sequencia ++;
+		this.matricula = year+StringUtils.lefZeroes(sequencia, 4);
+	}
 
 	public String getMatricula() {
 		return matricula;
 	}
+	
 
 	public void setMatricula(String matricula) {
 		this.matricula = matricula;
@@ -83,6 +98,9 @@ public class Aluno implements Serializable {
 	}
 
 	public LocalDate getDataNascimento() {
+		if(dataNascimento==null) {
+			dataNascimento = LocalDate.now();
+		}
 		return dataNascimento;
 	}
 
